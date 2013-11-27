@@ -1,0 +1,31 @@
+{
+  "name": "compile2js",
+  "version": "0.0.0",
+  "description": "Bootstrap package for creating compilers to JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/RReverser/compile2js.git"
+  },
+  "keywords": [
+    "compiler",
+    "javascript",
+    "ast",
+    "parser",
+    "translator"
+  ],
+  "author": "Ingvar Stepanyan <me@rreverser.com> (http://rreverser.com/)",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/RReverser/compile2js/issues"
+  },
+  "homepage": "https://github.com/RReverser/compile2js",
+  "dependencies": {
+    "jison": "~0.4.13",
+    "ast-types": "~0.3.10",
+    "escodegen": "~1.0.0"
+  }
+}
