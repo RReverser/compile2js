@@ -33,3 +33,4 @@ var generated = escodegen.generate(ast, {
 
 output('code', generated.code + '\n//# sourceMappingURL=' + paths.dest.map);
 output('map', generated.map);
+output('html', '<script src="' + paths.dest.code + '"></script>');

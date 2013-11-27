@@ -1,4 +1,4 @@
-var source = 'sample.pas';
+var source = 'sample.txt';
 
 exports.src = source;
 
@@ -9,5 +9,6 @@ exports.dest = {
 	path: './out/',
 	code: source.replace(extension, '.js'),
 	map: source.replace(extension, '.js.map'),
-	ast: source.replace(extension, '.json')
+	ast: source.replace(extension, '.json'),
+	html: 'index.html'
 };
