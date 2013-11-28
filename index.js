@@ -19,7 +19,6 @@ paths.src = program.input;
 paths.dest.path = program.output;
 
 var src = paths.readSync('src');
-paths.dest.writeSync('src', src);
 
 // converting syntax to parser code
 paths.writeSync(
@@ -30,19 +29,21 @@ paths.writeSync(
 // and using it since Jison doesn't use JS code directly from .jison syntax
 var ast = require(paths.parser).parse(src);
 
+if (program.ast) {
+	paths.dest.writeSync('ast', JSON.stringify(ast, null, '\t'));
+}
+
 if (program.sourceMap) {
+	ast.add('//# sourceMappingURL=' + paths.dest.getBaseName('map'));
+
 	var generated = ast.toStringWithSourceMap({
 		file: paths.dest.getBaseName('code')
 	});
-	
-	paths.dest.writeSync('code', generated.code + '//# sourceMappingURL=' + paths.dest.getBaseName('map'));
+
+	paths.dest.writeSync('code', generated.code);
 	paths.dest.writeSync('map', generated.map);
 } else {
 	paths.dest.writeSync('code', ast.toString());
-}
-
-if (program.ast) {
-	paths.dest.writeSync('ast', ast);
 }
 
 paths.dest.writeSync('html', '<script src="' + paths.dest.getBaseName('code') + '"></script>');

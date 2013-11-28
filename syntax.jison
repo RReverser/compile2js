@@ -1,13 +1,14 @@
 %{
 	var paths = require('./paths'),
 		SourceNode = require('source-map').SourceNode,
-		val = JSON.stringify;
+		val = JSON.stringify,
+		destSrc = paths.dest.src;
 
 	function js(chunk, location, name) {
 		return new SourceNode(
 			location && location.first_line,
 			location && location.first_column,
-			paths.src,
+			location && destSrc,
 			chunk,
 			name && String(name === true ? chunk : name)
 		);
@@ -34,7 +35,17 @@
 
 program
 	: stmts EOF {
-		return js(['RESULT = "";', $$], @$);
+		return js([
+			'var VM = (function (VM) {\n',
+			new SourceNode(
+				1, 0,
+				paths.dest.VM,
+				paths.readSync('VM')
+			),
+			'return VM;\n',
+			'})({});\n',
+			$$
+		]);
 	}
 	;
 
@@ -43,7 +54,7 @@ stmts
 	;
 
 stmt
-	: e ';' -> js(['RESULT=', $1, js(';\n', @2)], @$)
+	: e ';' -> js(['VM.current=', $1, ';\n'], @$)
 	;
 
 id
