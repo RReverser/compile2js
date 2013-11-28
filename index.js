@@ -51,6 +51,6 @@ if (options.sourceMap) {
 	write(options.output, ast);
 }
 
-if (options.demo) {
-	write(options.demo, '<script src="' + options.relative('demo', 'output') + '"></script>');
+if (options.runner) {
+	write(options.runner, '<script src="' + options.relative('runner', 'output') + '"></script>');
 }

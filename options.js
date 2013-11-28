@@ -2,7 +2,7 @@ var program =
 	require('commander')
 	.version(require('./package.json').version)
 	.option('-i, --input <source>', 'specify input file')
-	.option('-o, --output [js]', 'specify output file (default: <input>.js)')
+	.option('-o, --output <js>', 'specify output file (default: <input>.js)')
 	.option('-a, --ast [json]', 'save AST (default path: <output>.json)')
 	.option('-m, --source-map [map]', 'generate source map (default path: <output>.js.map)')
 	.option('-r, --runner [html]', 'generate HTML runner (default path: <output>.html)')
@@ -28,7 +28,7 @@ function optionalOutput(option, defValue) {
 }
 
 optionalOutput('ast', output + '.json');
-optionalOutput('sourceMap', program.output + '.map');
+optionalOutput('sourceMap', exports.output + '.map');
 optionalOutput('runner', output + '.html');
 
 exports.debug = !!program.debug;
