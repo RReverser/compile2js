@@ -1,15 +1,16 @@
 %{
-	var b = require('ast-types').builders,
+	var types = require('ast-types'),
+		b = types.builders,
 		paths = require('./paths');
 
-	function at(node, loc) {
-		node.loc = b.sourceLocation(
+	types.defineMethod('at', function (loc) {
+		this.loc = b.sourceLocation(
 			b.position(loc.first_line, loc.first_column),
 			b.position(loc.last_line, loc.last_column),
 			paths.src
 		);
-		return node;
-	}
+		return this;
+	});
 %}
 
 %lex
@@ -32,20 +33,20 @@
 
 program
 	: stmts EOF {
-		return b.program($$.body);
+		return b.program($$).at(@$);
 	}
 	;
 
 stmts
-	: stmt* -> b.blockStatement($$)
+	: stmt*
 	;
 
 stmt
-	: e ';' -> at(b.expressionStatement($$), @$)
+	: e ';' -> b.expressionStatement($$).at(@$)
 	;
 
 id
-	: ID -> b.identifier($$)
+	: ID -> b.identifier($$).at(@$)
 	;
 
 e

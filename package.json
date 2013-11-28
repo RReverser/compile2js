@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "Bootstrap package for creating compilers to JavaScript",
   "main": "index.js",
-  "scripts": {
-    "test": "node ."
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/RReverser/compile2js.git"
@@ -25,7 +22,8 @@
   "homepage": "https://github.com/RReverser/compile2js",
   "dependencies": {
     "jison": "~0.4.13",
-    "ast-types": "~0.3.10",
-    "escodegen": "~1.0.0"
+    "ast-types": ">= 0.3.11",
+    "escodegen": "~1.0.0",
+    "commander": "~2.1.0"
   }
 }

@@ -1,36 +1,49 @@
-var Parser = require('jison').Parser,
-	fs = require('fs'),
+var program = require('commander'),
+	Parser = require('jison').Parser,
 	escodegen = require('escodegen'),
-	paths = require('./paths'),
-	utf8 = {encoding: 'utf-8'},
-	src = fs.readFileSync(paths.src, utf8),
-	n = require('ast-types').namedTypes;
+	paths = require('./paths');
 
-function output(name, text) {
-	return fs.writeFileSync(paths.dest.path + paths.dest[name], text, utf8);
+program
+	.option('-i, --input <path>', 'specify input file')
+	.option('-o, --output <path>', 'specify output path (default: "out")', 'out')
+	.option('-a, --ast', 'save AST')
+	.option('-m, --source-map', 'generate source map')
+	.parse(process.argv);
+
+if (!program.input) {
+	program.help();
 }
 
-output('src', src);
+// settings paths from command-line options
+paths.src = program.input;
+paths.dest.path = program.output;
+
+var src = paths.readSync('src');
+paths.dest.writeSync('src', src);
 
 // converting syntax to parser code
-fs.writeFileSync(
-	'syntax.js',
-	new Parser(fs.readFileSync('syntax.jison', utf8), {debug: true}).generate(),
-	utf8
+paths.writeSync(
+	'parser',
+	new Parser(paths.readSync('syntax'), {debug: true}).generate()
 );
 
 // and using it since Jison doesn't use JS code directly from .jison syntax
-var ast = require('./syntax').parse(src);
+var ast = require(paths.parser).parse(src);
 
-console.log(ast);
+if (program.ast) {
+	paths.dest.writeSync('ast', ast);
+}
 
-output('ast', JSON.stringify(ast, null, '\t'));
+if (program.sourceMap) {
+	var generated = escodegen.generate(ast, {
+		sourceMap: paths.src,
+		sourceMapWithCode: true
+	});
+	
+	paths.dest.writeSync('code', generated.code + '\n//# sourceMappingURL=' + paths.dest.getBaseName('map'));
+	paths.dest.writeSync('map', generated.map);
+} else {
+	paths.dest.writeSync('code', escodegen.generate(ast));
+}
 
-var generated = escodegen.generate(ast, {
-	sourceMap: paths.src,
-	sourceMapWithCode: true
-});
-
-output('code', generated.code + '\n//# sourceMappingURL=' + paths.dest.map);
-output('map', generated.map);
-output('html', '<script src="' + paths.dest.code + '"></script>');
+paths.dest.writeSync('html', '<script src="' + paths.dest.getBaseName('code') + '"></script>');
