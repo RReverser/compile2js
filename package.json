@@ -22,8 +22,7 @@
   "homepage": "https://github.com/RReverser/compile2js",
   "dependencies": {
     "jison": "~0.4.13",
-    "ast-types": ">= 0.3.11",
-    "escodegen": "~1.0.0",
-    "commander": "~2.1.0"
+    "commander": "~2.1.0",
+    "source-map": "~0.1.31"
   }
 }

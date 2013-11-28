@@ -1,16 +1,17 @@
 %{
-	var types = require('ast-types'),
-		b = types.builders,
-		paths = require('./paths');
+	var paths = require('./paths'),
+		SourceNode = require('source-map').SourceNode,
+		val = JSON.stringify;
 
-	types.defineMethod('at', function (loc) {
-		this.loc = b.sourceLocation(
-			b.position(loc.first_line, loc.first_column),
-			b.position(loc.last_line, loc.last_column),
-			paths.src
+	function js(chunk, location, name) {
+		return new SourceNode(
+			location && location.first_line,
+			location && location.first_column,
+			paths.src,
+			chunk,
+			name && String(name === true ? chunk : name)
 		);
-		return this;
-	});
+	}
 %}
 
 %lex
@@ -33,7 +34,7 @@
 
 program
 	: stmts EOF {
-		return b.program($$).at(@$);
+		return js(['RESULT = "";', $$], @$);
 	}
 	;
 
@@ -42,11 +43,11 @@ stmts
 	;
 
 stmt
-	: e ';' -> b.expressionStatement($$).at(@$)
+	: e ';' -> js(['RESULT=', $1, js(';\n', @2)], @$)
 	;
 
 id
-	: ID -> b.identifier($$).at(@$)
+	: ID -> js(val($$), @$, $$)
 	;
 
 e
