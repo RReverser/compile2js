@@ -1,8 +1,8 @@
 %{
-	var paths = require('./paths'),
+	var options = require('./options'),
+		destSrc = options.relative('output', 'input'),
 		SourceNode = require('source-map').SourceNode,
-		val = JSON.stringify,
-		destSrc = paths.dest.src;
+		val = JSON.stringify;
 
 	function js(chunk, location, name) {
 		return new SourceNode(
@@ -35,17 +35,7 @@
 
 program
 	: stmts EOF {
-		return js([
-			'var VM = (function (VM) {\n',
-			new SourceNode(
-				1, 0,
-				paths.dest.VM,
-				paths.readSync('VM')
-			),
-			'return VM;\n',
-			'})({});\n',
-			$$
-		]);
+		return js($$);
 	}
 	;
 

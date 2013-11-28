@@ -1,3 +1,5 @@
-/syntax.js
-/node_modules
 /.idea
+/node_modules
+/syntax.js
+/sample.*
+!/sample.txt
