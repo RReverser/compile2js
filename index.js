@@ -4,6 +4,7 @@ var program = require('commander'),
 	paths = require('./paths');
 
 program
+	.version(require('./package.json').version)
 	.option('-i, --input <path>', 'specify input file')
 	.option('-o, --output <path>', 'specify output path (default: "out")', 'out')
 	.option('-a, --ast', 'save AST')
