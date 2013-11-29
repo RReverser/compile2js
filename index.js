@@ -24,11 +24,7 @@ var ast =
 	.parse(read(options.input))
 	.prepend([
 		'var VM = (function (VM) {\n',
-		new SourceNode(
-			1, 0,
-			options.relative('output', 'VM'),
-			read(options.VM)
-		),
+		read('VM.js'),
 		'return VM;\n',
 		'})({});\n'
 	])

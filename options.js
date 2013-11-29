@@ -33,8 +33,6 @@ optionalOutput('runner', output + '.html');
 
 exports.debug = !!program.debug;
 
-exports.VM = 'VM.js';
-
 var path = require('path'),
 	pathSep = /\\/g;
 
