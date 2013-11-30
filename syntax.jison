@@ -22,7 +22,7 @@
 
 %%
 \s+                         /* skip whitespace */
-[A-Za-z_]\w+                return 'ID';
+[A-Za-z_]\w*                return 'ID';
 ';'                         return yytext;
 <<EOF>>                     return 'EOF';
 
