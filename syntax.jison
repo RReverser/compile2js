@@ -1,8 +1,7 @@
 %{
     var options = require('./options'),
         destSrc = options.relative('output', 'input'),
-        SourceNode = require('source-map').SourceNode,
-        val = JSON.stringify;
+        SourceNode = require('source-map').SourceNode;
 
     function js(chunk, location, name) {
         return new SourceNode(
@@ -10,8 +9,12 @@
             location && location.first_column,
             location && destSrc,
             chunk,
-            name && String(name === true ? chunk : name)
+            name
         );
+    }
+
+    function val(literal, location, name) {
+        return js(JSON.stringify(literal), location, name);
     }
 %}
 
@@ -48,7 +51,7 @@ stmt
     ;
 
 id
-    : ID -> js(val($$), @$, $$)
+    : ID -> val($$, @$, $$)
     ;
 
 e
